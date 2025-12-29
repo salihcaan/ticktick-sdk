@@ -28,6 +28,7 @@ from ticktick_sdk.models import (
     HabitSection,
     HabitCheckin,
     HabitPreferences,
+    set_default_timezone,
 )
 from ticktick_sdk.settings import TickTickSettings, get_settings
 from ticktick_sdk.unified import UnifiedTickTickAPI
@@ -105,6 +106,9 @@ class TickTickClient:
 
         # Validate settings
         settings.validate_all_ready()
+
+        # Set the default timezone for datetime operations
+        set_default_timezone(settings.timezone)
 
         return cls(
             client_id=settings.client_id,

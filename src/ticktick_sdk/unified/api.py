@@ -477,7 +477,7 @@ class UnifiedTickTickAPI:
             priority: Priority (0, 1, 3, 5)
             start_date: Start date
             due_date: Due date
-            time_zone: Timezone
+            time_zone: Timezone (auto-set from settings if not provided)
             is_all_day: All-day flag
             reminders: List of reminder triggers
             repeat_flag: Recurrence rule
@@ -499,6 +499,22 @@ class UnifiedTickTickAPI:
                 "Recurrence (repeat_flag) requires start_date. "
                 "TickTick silently ignores recurrence without a start date."
             )
+
+        # Auto-set timezone from settings if dates are provided but timezone is not
+        if time_zone is None and (start_date is not None or due_date is not None):
+            from ticktick_sdk.models import get_default_timezone
+            time_zone = get_default_timezone()
+
+        # Auto-set is_all_day=False when specific times are provided
+        if is_all_day is None and (start_date is not None or due_date is not None):
+            # Check if the datetime has a time component (not just date)
+            has_time = False
+            if start_date is not None and (start_date.hour != 0 or start_date.minute != 0):
+                has_time = True
+            if due_date is not None and (due_date.hour != 0 or due_date.minute != 0):
+                has_time = True
+            if has_time:
+                is_all_day = False
 
         # Default to inbox if no project specified
         if project_id is None:

@@ -20,6 +20,7 @@ Models:
     - HabitPreferences: Habit settings
 """
 
+from ticktick_sdk.models.base import set_default_timezone, get_default_timezone
 from ticktick_sdk.models.task import Task, ChecklistItem, TaskReminder
 from ticktick_sdk.models.project import Project, ProjectGroup, Column, ProjectData
 from ticktick_sdk.models.tag import Tag
@@ -27,6 +28,8 @@ from ticktick_sdk.models.user import User, UserStatus, UserStatistics
 from ticktick_sdk.models.habit import Habit, HabitSection, HabitCheckin, HabitPreferences
 
 __all__ = [
+    "set_default_timezone",
+    "get_default_timezone",
     "Task",
     "ChecklistItem",
     "TaskReminder",

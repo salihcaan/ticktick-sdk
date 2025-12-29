@@ -10,8 +10,9 @@ from __future__ import annotations
 import json
 from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
-from ticktick_sdk.models import Task, Project, ProjectGroup, Tag, User, UserStatus, UserStatistics
+from ticktick_sdk.models import Task, Project, ProjectGroup, Tag, User, UserStatus, UserStatistics, get_default_timezone
 from ticktick_sdk.tools.inputs import ResponseFormat
 
 # Maximum response size in characters
@@ -19,17 +20,35 @@ CHARACTER_LIMIT = 25000
 
 
 def format_datetime(dt: datetime | None) -> str:
-    """Format a datetime for human-readable display."""
+    """
+    Format a datetime for human-readable display.
+
+    Converts the datetime to the user's configured timezone before displaying.
+    """
     if dt is None:
         return "Not set"
-    return dt.strftime("%Y-%m-%d %H:%M %Z").strip()
+
+    # Convert to user's configured timezone
+    tz = ZoneInfo(get_default_timezone())
+    dt_local = dt.astimezone(tz)
+
+    return dt_local.strftime("%Y-%m-%d %H:%M %Z").strip()
 
 
 def format_date(dt: datetime | None) -> str:
-    """Format a date for human-readable display."""
+    """
+    Format a date for human-readable display.
+
+    Converts the datetime to the user's configured timezone before displaying.
+    """
     if dt is None:
         return "Not set"
-    return dt.strftime("%Y-%m-%d")
+
+    # Convert to user's configured timezone
+    tz = ZoneInfo(get_default_timezone())
+    dt_local = dt.astimezone(tz)
+
+    return dt_local.strftime("%Y-%m-%d")
 
 
 def priority_label(priority: int) -> str:
